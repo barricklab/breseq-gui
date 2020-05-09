@@ -1,3 +1,9 @@
+# Custom
+out
+package-lock.json
+
+#Node below
+
 # Logs
 logs
 *.log

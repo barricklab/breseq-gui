@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>breseq</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <img src="_img/breseq.png">
+<!--    <h1>Run breseq</h1>  -->
+      <div id="setupPane">
+      <form name="setupForm" onSubmit="JavaScript:runBreseq(event)">
+        <input type="button" value="Select reference file(s)..." id="referenceFileButton">
+        <br><br>
+          <div style="border:1px; border-style:solid; width:100%; height:120px; overflow:auto; padding:2px;">
+          <ul id="referenceFilePaths" style="list-style:none; padding:0;">
+            <li>No reference files selected.</li>
+          </ul>
+        </div>
+        <br>
+        <input type="button" value="Select read file(s)..." id="readFileButton">
+        <br><br>
+        <div style="border:1px; border-style:solid; width:100%; height:120px; overflow:auto; padding:2px;">
+          <ul id="readFilePaths" style="list-style:none; padding:0;">
+            <li>No read files selected.</li>
+          </ul>
+        </div>
+        <br>
+        <input type="button" value="Select output directory..." id="outputDirectoryButton">
+        <br>
+        <div id="outputDirectoryPath"  style="width:100%;padding:2px;">
+           No output directory selected.
+        </div>
+        <br>
+        <b>Advanced Options:</b>
+        <br>
+        <input style="width:100%;" type="text" name="advancedOptions" id="advancedOptions" value="">
+        <br><br>
+        <b><i>breseq</i> command that will be run:</b>
+        <br>
+        <div id="breseqCommand"  style="width:100%;padding:2px;overflow:auto;">
+           <font color="red">You must select a reference file, read file, and output directory before running <i>breseq</i></font>
+        </div>
+        <br><br>
+        <input id="runBreseqButton" type="submit" value="Run Command" disabled="true">
+      </form>
+    </div>
+    <div id="runningPane" style="display:none;">
+      <pre style="margin:0px">
+      <div id="breseqOutput"  style="border:1px; border-style:solid; height:400px;width:100%;padding:2px;overflow:auto;">Running</div>
+      </pre>
+      <div id="breseqOutputLink"  style="width:100%; padding:2px; font-size:1.4em; height:20px;"></div>
+      <br>
+      <input type="button" value="End Run" id="endRunButton">
+    </div>
+    <script src='runBreseq.js'></script>
+  </body>
+</html>

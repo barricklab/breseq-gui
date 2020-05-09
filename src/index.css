@@ -1,0 +1,11 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size:12px;
+  margin: auto;
+  /* max-width: 38rem; */
+  padding: 2rem;
+}
+
+li{
+  margin: 6px 0;
+}

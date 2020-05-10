@@ -1,7 +1,7 @@
 {
-  "name": "breseq",
-  "productName": "breseq",
-  "version": "1.0.0",
+  "name": "breseq-gui",
+  "productName": "breseq-gui",
+  "version": "0.0.1",
   "description": "Electron GUI for breseq",
   "repository": {
     "type" : "git",
@@ -23,7 +23,9 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "src/_img/icon.icns"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -32,24 +34,10 @@
           }
         },
         {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
           "name": "@electron-forge/maker-dmg",
           "config": {
             "format": "ULFO"
           }
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ]
     }

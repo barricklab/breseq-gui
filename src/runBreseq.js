@@ -22,7 +22,7 @@ function addOutputText(data) {
   document.getElementById('breseqOutput').innerHTML = document.getElementById('breseqOutput').innerHTML + data.replace(/\n/g, "<br>");
 
   if (autoScroll) {
-    console.log("Scrolling Scrolling Scrolling...");
+    //console.log("Scrolling Scrolling Scrolling...");
     document.getElementById('breseqOutput').scrollTop = document.getElementById('breseqOutput').scrollHeight;
   }
 }
@@ -39,37 +39,63 @@ function runBreseq(event) {
   document.getElementById('runningPane').style.display = "block"
   document.getElementById('setupPane').style.display = "none"
 
-  const env = childProcess.exec('env');
-
-  breseqProcess = childProcess.exec(breseqCommand);
-
   breseqRunning = true
-  breseqProcess.stdout.on('data', (data) => {
-    //console.log(`stdout: ${data}`);
-    addOutputText(data)
-  });
 
-  breseqRunning = true
-  breseqProcess.stderr.on('data', (data) => {
-    //console.log(`stderr: ${data}`);
-    addOutputText(data)
-  });
+  // We have to test bash as a backup from new default of zsh
+  // to find the installation location of anaconda
+  var theShell = '/bin/sh'
+  var validBreseqFound = false
 
-  breseqProcess.on('close', (code) => {
-    breseqRunning = false
-    //console.log(`breseq process exited with code ${code}`);
+  // Try the default shell
+  breseqCheckProcess = childProcess.exec("breseq", shell=theShell);
 
-    // Link to output if it exists.
-    const breseqOutputFilePath= outputDirectoryPath + "/output/index.html";
-
-    fs.access(breseqOutputFilePath, fs.F_OK, (err) => {
-      if (err) {
-        console.error(err);
-        return;
+  breseqCheckProcess.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`);
+      if (data.includes('http://barricklab.org/breseq')) {
+        //validBreseqFound = true
       }
-      document.getElementById('breseqOutputLink').innerHTML = "<a href=\"" + breseqOutputFilePath + "\" target=\"_blank\">" + "Click here to view <i>breseq</i> output!" + "</a>";
+    });
+
+
+  // When we close the check, run the main command
+  breseqCheckProcess.on('close', (code) => {
+
+    if (!validBreseqFound) {
+      theShell = '/bin/bash'
+    }
+    console.log(`shell: ${theShell}`);
+    breseqProcess = childProcess.exec(breseqCommand, shell=theShell);
+
+    breseqProcess.stdout.on('data', (data) => {
+      //console.log(`stdout: ${data}`);
+      addOutputText(data)
+    });
+
+    breseqProcess.stderr.on('data', (data) => {
+      //console.log(`stderr: ${data}`);
+      addOutputText(data)
+    });
+
+    breseqProcess.on('close', (code) => {
+      breseqRunning = false
+      //console.log(`breseq process exited with code ${code}`);
+
+      // Link to output if it exists.
+      const breseqOutputFilePath= outputDirectoryPath + "/output/index.html";
+
+      fs.access(breseqOutputFilePath, fs.F_OK, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        document.getElementById('breseqOutputLink').innerHTML = "<a href=\"" + breseqOutputFilePath + "\" target=\"_blank\">" + "Click here to view <i>breseq</i> output!" + "</a>";
+      });
     });
   });
+
+  console.log(theShell);
+
+
 }
 
 const {dialog} = require('electron').remote;

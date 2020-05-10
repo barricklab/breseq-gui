@@ -27,6 +27,7 @@ const createWindow = () => {
 
 
   // Open the DevTools.
+  // UNCOMMENT THIS WHEN DEBUGGING
   //mainWindow.webContents.openDevTools();
 };
 

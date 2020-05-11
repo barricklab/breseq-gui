@@ -11,6 +11,10 @@ var advancedOptions = "";
 var breseqProcess;
 var breseqRunning = false;
 
+// This fixes the PATH to include normal login scripts on MacOS X
+const fixPath = require('fix-path');
+fixPath();
+
 function addOutputText(data) {
 
   // autoscroll if at bottom
@@ -43,53 +47,35 @@ function runBreseq(event) {
 
   // We have to test bash as a backup from new default of zsh
   // to find the installation location of anaconda
-  var theShell = '"env; " + /bin/sh -l'
-  var validBreseqFound = false
+  var theShell = '/bin/sh'
 
-  // Try the default shell
-  breseqCheckProcess = childProcess.exec("breseq", shell=theShell);
+  addOutputText(theShell + "\n")
+  addOutputText("env; " + breseqCommand + "\n")
+  breseqProcess = childProcess.exec("env; " + breseqCommand, shell=theShell);
 
-  breseqCheckProcess.stderr.on('data', (data) => {
-      //console.log(`stderr: ${data}`);
-      if (data.includes('http://barricklab.org/breseq')) {
-        validBreseqFound = true
+  breseqProcess.stdout.on('data', (data) => {
+    //console.log(`stdout: ${data}`);
+    addOutputText(data)
+  });
+
+  breseqProcess.stderr.on('data', (data) => {
+    //console.log(`stderr: ${data}`);
+    addOutputText(data)
+  });
+
+  breseqProcess.on('close', (code) => {
+    breseqRunning = false
+    //console.log(`breseq process exited with code ${code}`);
+
+    // Link to output if it exists.
+    const breseqOutputFilePath= outputDirectoryPath + "/output/index.html";
+
+    fs.access(breseqOutputFilePath, fs.F_OK, (err) => {
+      if (err) {
+        console.error(err);
+        return;
       }
-    });
-
-
-  // When we close the check, run the main command
-  breseqCheckProcess.on('close', (code) => {
-
-    if (!validBreseqFound) {
-      theShell = '/bin/bash -l'
-    }
-    console.log(`shell: ${theShell}`);
-    breseqProcess = childProcess.exec("env; " + breseqCommand, shell=theShell);
-
-    breseqProcess.stdout.on('data', (data) => {
-      //console.log(`stdout: ${data}`);
-      addOutputText(data)
-    });
-
-    breseqProcess.stderr.on('data', (data) => {
-      //console.log(`stderr: ${data}`);
-      addOutputText(data)
-    });
-
-    breseqProcess.on('close', (code) => {
-      breseqRunning = false
-      //console.log(`breseq process exited with code ${code}`);
-
-      // Link to output if it exists.
-      const breseqOutputFilePath= outputDirectoryPath + "/output/index.html";
-
-      fs.access(breseqOutputFilePath, fs.F_OK, (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        document.getElementById('breseqOutputLink').innerHTML = "<a href=\"" + breseqOutputFilePath + "\" target=\"_blank\">" + "Click here to view <i>breseq</i> output!" + "</a>";
-      });
+      document.getElementById('breseqOutputLink').innerHTML = "<a href=\"" + breseqOutputFilePath + "\" target=\"_blank\">" + "Click here to view <i>breseq</i> output!" + "</a>";
     });
   });
 

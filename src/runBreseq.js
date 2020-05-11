@@ -43,7 +43,7 @@ function runBreseq(event) {
 
   // We have to test bash as a backup from new default of zsh
   // to find the installation location of anaconda
-  var theShell = '"env; " + /bin/sh -i'
+  var theShell = '"env; " + /bin/sh -l'
   var validBreseqFound = false
 
   // Try the default shell
@@ -61,7 +61,7 @@ function runBreseq(event) {
   breseqCheckProcess.on('close', (code) => {
 
     if (!validBreseqFound) {
-      theShell = '/bin/bash -i'
+      theShell = '/bin/bash -l'
     }
     console.log(`shell: ${theShell}`);
     breseqProcess = childProcess.exec("env; " + breseqCommand, shell=theShell);

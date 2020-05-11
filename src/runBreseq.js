@@ -43,16 +43,16 @@ function runBreseq(event) {
 
   // We have to test bash as a backup from new default of zsh
   // to find the installation location of anaconda
-  var theShell = '/bin/sh'
+  var theShell = '"env; " + /bin/sh -i'
   var validBreseqFound = false
 
   // Try the default shell
   breseqCheckProcess = childProcess.exec("breseq", shell=theShell);
 
   breseqCheckProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      //console.log(`stderr: ${data}`);
       if (data.includes('http://barricklab.org/breseq')) {
-        //validBreseqFound = true
+        validBreseqFound = true
       }
     });
 
@@ -61,10 +61,10 @@ function runBreseq(event) {
   breseqCheckProcess.on('close', (code) => {
 
     if (!validBreseqFound) {
-      theShell = '/bin/bash'
+      theShell = '/bin/bash -i'
     }
     console.log(`shell: ${theShell}`);
-    breseqProcess = childProcess.exec(breseqCommand, shell=theShell);
+    breseqProcess = childProcess.exec("env; " + breseqCommand, shell=theShell);
 
     breseqProcess.stdout.on('data', (data) => {
       //console.log(`stdout: ${data}`);

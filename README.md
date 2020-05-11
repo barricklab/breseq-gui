@@ -6,7 +6,9 @@ Currently, you must [install _breseq_](https://barricklab.org/twiki/pub/Lab/Tool
 
 ## Developer Quick Start
 
-`breseq-gui` is an [Electron Forge](https://www.electronforge.io/) project. You will need to install [npm](https://www.npmjs.com/get-np) for development. Then, you should be able to run this command from the main source directory for development:
+`breseq-gui` is an [Electron Forge](https://www.electronforge.io/) project. For development, you will need to [install npm](https://www.npmjs.com/get-np) and then [install Electron](https://www.electronjs.org/docs/tutorial/installation).
+
+You should now be able to run this command from the main source directory to launch the repository version of **breseq-gui**:
 
 ```
 npm start

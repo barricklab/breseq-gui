@@ -43,6 +43,7 @@
     }
   },
   "dependencies": {
+    "lodash": ">=4.17.21",
     "electron-squirrel-startup": "^1.0.0",
     "fix-path": "^3.0.0"
   },
